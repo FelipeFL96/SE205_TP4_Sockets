@@ -56,10 +56,8 @@ public class Serv_UDP extends Thread {
                 // Envoyer la reponse vers le client
                 // dont on recupere l'addresse IP et le port
                 InetAddress Adresse_IP = Message.getAddress();
-                Port                   = Message.getPort();
-                Message                = new DatagramPacket (Tampon, 
-                            Tampon.length, Adresse_IP, 
-                                    Port);
+                Port                   = 7548;//Message.getPort();
+                Message                = new DatagramPacket (Tampon, Tampon.length, Adresse_IP, Port);
                 Socket_UDP.send(Message);
             } 
             catch (IOException e) {

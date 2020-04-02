@@ -46,17 +46,16 @@ public class Serv_Mux {
 		// La ligne suivante sera decommentee quand on ajoute 
 		// le serveur UDP (une entree supplememtaire dans 
 		// le tableau de threads.
-		// Nbre_Standard--;  
+		Nbre_Standard--;
 	
-		//    Creation des threads "standards"
+		// Creation des threads "standards"
 		for (j=1 ; j <= Nbre_Standard ; j++) {
 			Tab_Threads[j+Nbre_Serv_TCP] = new Thread_Standard (j+Nbre_Serv_TCP);
 		}
 		System.out.println 	("threads banaals creee "); 
 
 		// Creation du thread serveur UDP : A Faire !!!!!!
-		// 
-		//
+		Tab_Threads[Nbre_Serv_TCP+Nbre_Standard] = new Serv_UDP();
 
 
 		// Demarrage de tous les threads  
