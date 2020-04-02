@@ -8,49 +8,39 @@ import java.net.*;
 //  Il fait l'echo du message envoye.
 //
 //////////////////////////////////////////////////////
-public class Serv_TCP extends Thread
-{
-  int Port;
+public class Serv_TCP extends Thread {
+	int Port;
   
-  public Serv_TCP (int Port)
-    {
-      super ("Serv_TCP-"+ Port);
-      this.Port = Port;
+  	public Serv_TCP (int Port) {
+		super ("Serv_TCP-"+ Port);
+		this.Port = Port;
     }
   
-  public void run ()
-    {
-      Socket Sock_Comm;
-	 try
-	{
-	  ServerSocket Sock_Ecou =  new ServerSocket(Port);
-	  System.out.println("Serveur(" + Thread.currentThread()  + ") attend sur " + Port );
+  	public void run () {
+		ServerSocket Sock_Ecou;
+      	Socket Sock_Comm;
+		
+		try {
+			Sock_Ecou =  new ServerSocket(Port);
+			System.out.println("Serveur(" + Thread.currentThread()  + ") attend sur " + Port );
 
-// Attente de demande d'etablissement de
-// communication sur le port d'ecoute (Sock_Ecou).
-// Si tout se passe bien la communication
-// est etablie entre le client et le port 
-// renvoye par accept sur Sock_Ecou.
-// Ce port (Sock_Comm) sera utilise pour la comm. 
-// avec le client.
-
-// Cette comm. sera geree par un thread du type Echo_TCP_Thread.
-
-	  while (true)
-	    {
-			//sleep (1000);// MODIF A FAIRE : attente sur le port d'ecoute.
-			System.out.println("Conexão esperada na porta: " + Port );	
-			Sock_Comm = Sock_Ecou.accept();
-			System.out.println("Abrindo comunicação com a porta: " + Port );
-			// MODIF A FAIRE : lancer thread de gestion de comm.
-			new Echo_TCP_Thread(Sock_Comm).start();
-	    }
-	}
-      catch (Exception e)
-	{
-	  e.printStackTrace();
-	}
-      
+			/* 
+			* Attente de demande d'etablissement de communication sur le port d'ecoute (Sock_Ecou).
+			* Si tout se passe bien la communication est etablie entre le client et le port renvoye 
+			* par accept sur Sock_Ecou.
+			* Ce port (Sock_Comm) sera utilise pour la communication avec le client.
+			* Cette comm. sera geree par un thread du type Echo_TCP_Thread.
+			*/
+			while (true) {
+				// Attente sur le port d'ecoute.
+				Sock_Comm = Sock_Ecou.accept();
+				// Lancer thread de gestion de comm.
+				new Echo_TCP_Thread(Sock_Comm).start();
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 	
 }
@@ -61,46 +51,37 @@ public class Serv_TCP extends Thread
 // avec un client
 //////////////////////////////////////////////////////////
 
-class Echo_TCP_Thread extends Thread
-{
+class Echo_TCP_Thread extends Thread {
   Socket Sock_Thr;
 
-  	public Echo_TCP_Thread (Socket Le_Socket)
-    {
-      this.Sock_Thr = Le_Socket;
+  	public Echo_TCP_Thread (Socket Le_Socket) {
+		this.Sock_Thr = Le_Socket;
     }
   
-	public void run()
-	{
-		try 
-		{
+	public void run() {
+		try {
 			PrintWriter output  = new PrintWriter(Sock_Thr.getOutputStream());
 			InputStreamReader input = new InputStreamReader(Sock_Thr.getInputStream());
 			BufferedReader binput   = new BufferedReader(input);
 			
 			String temp;
 
-			while ((temp=binput.readLine()) != null)
-			{
+			while ((temp=binput.readLine()) != null) {
 				output.print(this.getName() + " repond -> ");
 				output.println(temp);
 				output.flush();
 				System.out.println ("Fils serveur : " + Thread.currentThread() + " a recu: "  + temp);
 			}	
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			return;
 		}
-      	finally
-		{
-			try 
-			{
+      	finally {
+			try  {
 				Sock_Thr.close();
 				System.out.println("Fils Serveur " + Thread.currentThread()  + " : Fin !!! ");
 			} 
-			catch (IOException e)
-			{
+			catch (IOException e) {
 			}
 		}
     }
